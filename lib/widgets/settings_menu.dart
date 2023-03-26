@@ -8,12 +8,9 @@ import '/models/settings.dart';
 import '/widgets/main_menu.dart';
 import '/game/audio_manager.dart';
 
-// This represents the settings menu overlay.
 class SettingsMenu extends StatelessWidget {
-  // An unique identified for this overlay.
   static const id = 'SettingsMenu';
 
-  // Reference to parent game.
   final DinoRun gameRef;
 
   const SettingsMenu(this.gameRef, {Key? key}) : super(key: key);
@@ -33,8 +30,7 @@ class SettingsMenu extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20)),
               color: Colors.black.withAlpha(100),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 100),
+                padding: const EdgeInsets.symmetric(horizontal: 100),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -43,7 +39,7 @@ class SettingsMenu extends StatelessWidget {
                       builder: (context, bgm, __) {
                         return SwitchListTile(
                           title: const Text(
-                            'Music',
+                            'Âm thanh',
                             style: TextStyle(
                               fontSize: 30,
                               color: Colors.white,
@@ -68,7 +64,7 @@ class SettingsMenu extends StatelessWidget {
                       builder: (context, sfx, __) {
                         return SwitchListTile(
                           title: const Text(
-                            'Effects',
+                            'Hiệu ứng',
                             style: TextStyle(
                               fontSize: 30,
                               color: Colors.white,

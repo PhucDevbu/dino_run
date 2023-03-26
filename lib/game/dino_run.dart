@@ -20,7 +20,10 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
   // List of all the image assets.
   static const _imageAssets = [
     'DinoSprites - vita.png',
-    'AngryPig/Walk (36x30).png',
+    'DinoSprites - tard.png',
+    'DinoSprites - doux.png',
+    'DinoSprites - mort.png',
+    'Chameleon/Run (84x38).png',
     'Rino/Run (52x34).png',
     'BlueBird/Flying (32x32).png',
     'Chicken/Run (32x34).png',
@@ -28,6 +31,8 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
     'Slime/Idle-Run (44x30).png',
     'Skull/Orange Particle.png',
     'Sprite_heart.png',
+    'Rocks/Rock1_Run (38x34).png',
+    'Duck/Idle (36x36).png',
     'parallax/plx-1.png',
     'parallax/plx-2.png',
     'parallax/plx-3.png',
@@ -49,38 +54,34 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
   late EnemyManager _enemyManager;
   late ItemManager _itemManager;
 
-  // This method get called while flame is preparing this game.
   @override
   Future<void> onLoad() async {
-    /// Read [PlayerData] and [Settings] from hive.
+
     playerData = await _readPlayerData();
     settings = await _readSettings();
 
-    /// Initilize [AudioManager].
+
     await AudioManager.instance.init(_audioAssets, settings);
 
-    // Start playing background music. Internally takes care
-    // of checking user settings.
+
     AudioManager.instance.startBgm('8BitPlatformerLoop.wav');
 
-    // Cache all the images.
+
     await images.loadAll(_imageAssets);
 
-    // Set a fixed viewport to avoid manually scaling
-    // and handling different screen sizes.
+
     camera.viewport = FixedResolutionViewport(Vector2(360, 180));
 
-    /// Create a [ParallaxComponent] and add it to game.
+
     final parallaxBackground = await loadParallaxComponent(
       [
-        ParallaxImageData('parallax/plx-1.png'),
-        ParallaxImageData('parallax/plx-2.png'),
-        ParallaxImageData('parallax/plx-3.png'),
-        ParallaxImageData('parallax/plx-4.png'),
-        ParallaxImageData('parallax/plx-5.png'),
+        ParallaxImageData('Background/parallax-forest-back-trees.png'),
+        ParallaxImageData('Background/parallax-forest-front-trees.png'),
+        ParallaxImageData('Background/parallax-forest-lights.png'),
+        ParallaxImageData('Background/parallax-forest-middle-trees.png'),
         ParallaxImageData('parallax/plx-6.png'),
       ],
-      baseVelocity: Vector2(10, 0),
+      baseVelocity: Vector2(25, 0),
       velocityMultiplierDelta: Vector2(1.4, 0),
     );
     add(parallaxBackground);
@@ -88,10 +89,16 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
     return super.onLoad();
   }
 
-  /// This method add the already created [Dino]
-  /// and [EnemyManager] to this game.
+
   void startGamePlay() {
-    _dino = Dino(images.fromCache('DinoSprites - vita.png'), playerData);
+    if (playerData.dino == 'DinoSprites - mort.png') {
+      playerData.lives = 5;
+    } else if (playerData.dino == 'DinoSprites - tard.png') {
+      playerData.lives = 1;
+    } else {
+      playerData.lives = 3;
+    }
+    _dino = Dino(images.fromCache(playerData.dino), playerData);
     _enemyManager = EnemyManager(playerData);
     _itemManager = ItemManager(playerData);
 
@@ -100,7 +107,6 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
     add(_itemManager);
   }
 
-  // This method remove all the actors from the game.
   void _disconnectActors() {
     _dino.removeFromParent();
     _enemyManager.removeAllEnemies();
@@ -109,20 +115,26 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
     _itemManager.removeFromParent();
   }
 
-  // This method reset the whole game world to initial state.
+
   void reset() {
-    // First disconnect all actions from game world.
+
     _disconnectActors();
 
-    // Reset player data to inital values.
+
     playerData.currentScore = 0;
-    playerData.lives = 5;
+    if (playerData.dino == 'DinoSprites - mort.png') {
+      playerData.lives = 5;
+    } else if (playerData.dino == 'DinoSprites - tard.png') {
+      playerData.lives = 1;
+    } else {
+      playerData.lives = 3;
+    }
   }
 
-  // This method gets called for each tick/frame of the game.
+
   @override
   void update(double dt) {
-    // If number of lives is 0 or less, game is over.
+
     if (playerData.lives <= 0) {
       overlays.add(GameOverMenu.id);
       overlays.remove(Hud.id);
@@ -132,48 +144,45 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
     super.update(dt);
   }
 
-  // This will get called for each tap on the screen.
+
   @override
   void onTapDown(TapDownInfo info) {
-    // Make dino jump only when game is playing.
-    // When game is in playing state, only Hud will be the active overlay.
+
     if (overlays.isActive(Hud.id)) {
       _dino.jump();
     }
     super.onTapDown(info);
   }
 
-  /// This method reads [PlayerData] from the hive box.
+
   Future<PlayerData> _readPlayerData() async {
     final playerDataBox =
         await Hive.openBox<PlayerData>('DinoRun.PlayerDataBox');
     final playerData = playerDataBox.get('DinoRun.PlayerData');
 
-    // If data is null, this is probably a fresh launch of the game.
+
     if (playerData == null) {
-      // In such cases store default values in hive.
+
       await playerDataBox.put('DinoRun.PlayerData', PlayerData());
     }
 
-    // Now it is safe to return the stored value.
     return playerDataBox.get('DinoRun.PlayerData')!;
   }
 
-  /// This method reads [Settings] from the hive box.
+
   Future<Settings> _readSettings() async {
     final settingsBox = await Hive.openBox<Settings>('DinoRun.SettingsBox');
     final settings = settingsBox.get('DinoRun.Settings');
 
-    // If data is null, this is probably a fresh launch of the game.
     if (settings == null) {
-      // In such cases store default values in hive.
+
       await settingsBox.put(
         'DinoRun.Settings',
         Settings(bgm: true, sfx: true),
       );
     }
 
-    // Now it is safe to return the stored value.
+
     return settingsBox.get('DinoRun.Settings')!;
   }
 
@@ -181,8 +190,7 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
   void lifecycleStateChange(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        // On resume, if active overlay is not PauseMenu,
-        // resume the engine (lets the parallax effect play).
+
         if (!(overlays.isActive(PauseMenu.id)) &&
             !(overlays.isActive(GameOverMenu.id))) {
           resumeEngine();
@@ -191,8 +199,7 @@ class DinoRun extends FlameGame with TapDetector, HasCollisionDetection {
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
       case AppLifecycleState.inactive:
-        // If game is active, then remove Hud and add PauseMenu
-        // before pausing the game.
+
         if (overlays.isActive(Hud.id)) {
           overlays.remove(Hud.id);
           overlays.add(PauseMenu.id);

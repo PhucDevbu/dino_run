@@ -1,17 +1,18 @@
 import 'dart:ui';
 
+import 'package:dino_run/widgets/select_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '/widgets/hud.dart';
 import '/game/dino_run.dart';
 import '/widgets/settings_menu.dart';
 
-// This represents the main menu overlay.
+
 class MainMenu extends StatelessWidget {
-  // An unique identified for this overlay.
+
   static const id = 'MainMenu';
 
-  // Reference to parent game.
   final DinoRun gameRef;
 
   const MainMenu(this.gameRef, {Key? key}) : super(key: key);
@@ -36,7 +37,7 @@ class MainMenu extends StatelessWidget {
                 spacing: 10,
                 children: [
                   const Text(
-                    'Dino Run',
+                    'Khủng Long Phiêu Lưu',
                     style: TextStyle(
                       fontSize: 50,
                       color: Colors.white,
@@ -49,9 +50,21 @@ class MainMenu extends StatelessWidget {
                       gameRef.overlays.add(Hud.id);
                     },
                     child: const Text(
-                      'Play',
+                      'Chơi',
                       style: TextStyle(
                         fontSize: 30,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      gameRef.overlays.remove(MainMenu.id);
+                      gameRef.overlays.add(SelectMenu.id);
+                    },
+                    child: const Text(
+                      'Chọn khủng long',
+                      style: TextStyle(
+                        fontSize: 20,
                       ),
                     ),
                   ),
@@ -61,7 +74,18 @@ class MainMenu extends StatelessWidget {
                       gameRef.overlays.add(SettingsMenu.id);
                     },
                     child: const Text(
-                      'Settings',
+                      'Cài Đặt',
+                      style: TextStyle(
+                        fontSize: 30,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      SystemNavigator.pop();
+                    },
+                    child: const Text(
+                      'Thoát',
                       style: TextStyle(
                         fontSize: 30,
                       ),

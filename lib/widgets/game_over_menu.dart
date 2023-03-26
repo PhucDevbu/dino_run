@@ -9,13 +9,11 @@ import '/widgets/main_menu.dart';
 import '/models/player_data.dart';
 import '/game/audio_manager.dart';
 
-// This represents the game over overlay,
-// displayed with dino runs out of lives.
 class GameOverMenu extends StatelessWidget {
-  // An unique identified for this overlay.
+
   static const id = 'GameOverMenu';
 
-  // Reference to parent game.
+
   final DinoRun gameRef;
 
   const GameOverMenu(this.gameRef, {Key? key}) : super(key: key);
@@ -42,14 +40,14 @@ class GameOverMenu extends StatelessWidget {
                   spacing: 10,
                   children: [
                     const Text(
-                      'Game Over',
+                      'Trò chơi kết thúc',
                       style: TextStyle(fontSize: 40, color: Colors.white),
                     ),
                     Selector<PlayerData, int>(
                       selector: (_, playerData) => playerData.currentScore,
                       builder: (_, score, __) {
                         return Text(
-                          'You Score: $score',
+                          'Điểm của bạn là: $score',
                           style: const TextStyle(
                               fontSize: 40, color: Colors.white),
                         );
@@ -57,7 +55,7 @@ class GameOverMenu extends StatelessWidget {
                     ),
                     ElevatedButton(
                       child: const Text(
-                        'Restart',
+                        'Chơi lại',
                         style: TextStyle(
                           fontSize: 30,
                         ),
@@ -73,7 +71,7 @@ class GameOverMenu extends StatelessWidget {
                     ),
                     ElevatedButton(
                       child: const Text(
-                        'Exit',
+                        'Về Menu',
                         style: TextStyle(
                           fontSize: 30,
                         ),

@@ -18,33 +18,31 @@ class AudioManager {
     await FlameAudio.audioCache.loadAll(files);
   }
 
-  // Starts the given audio file as BGM on loop.
   void startBgm(String fileName) {
     if (settings.bgm) {
       FlameAudio.bgm.play(fileName, volume: 0.4);
     }
   }
 
-  // Pauses currently playing BGM if any.
+
   void pauseBgm() {
     if (settings.bgm) {
       FlameAudio.bgm.pause();
     }
   }
 
-  // Resumes currently paused BGM if any.
+
   void resumeBgm() {
     if (settings.bgm) {
       FlameAudio.bgm.resume();
     }
   }
 
-  // Stops currently playing BGM if any.
+
   void stopBgm() {
     FlameAudio.bgm.stop();
   }
 
-  // Plays the given audio file once.
   void playSfx(String fileName) {
     if (settings.sfx) {
       FlameAudio.play(fileName);

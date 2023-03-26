@@ -41,8 +41,6 @@ class Item extends SpriteAnimationComponent
   void update(double dt) {
     position.x -= itemData.speedX * dt;
 
-    // Remove the enemy and increase player score
-    // by 1, if enemy has gone past left end of the screen.
     if (position.x < -itemData.textureSize.x) {
       removeFromParent();
     }
@@ -54,8 +52,7 @@ class Item extends SpriteAnimationComponent
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    // Call hit only if other component is an Enemy and dino
-    // is not already in hit state.
+
     if ((other is Dino) ) {
       removeFromParent();
       

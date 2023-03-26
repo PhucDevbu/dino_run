@@ -3,13 +3,21 @@ import 'package:hive/hive.dart';
 
 part 'player_data.g.dart';
 
-// This class stores the player progress presistently.
+
 @HiveType(typeId: 0)
 class PlayerData extends ChangeNotifier with HiveObjectMixin {
   @HiveField(1)
   int highScore = 0;
 
-  int _lives = 5;
+  int _lives = 3;
+
+  String _dino = 'DinoSprites - mort.png';
+  String get dino => _dino;
+  set dino(String value) {
+    _dino = value;
+    notifyListeners();
+    save();
+  }
 
   int get lives => _lives;
   set lives(int value) {
