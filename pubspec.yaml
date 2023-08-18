@@ -39,6 +39,8 @@ flutter:
     - assets/images/Ghost/
     - assets/images/Slime/
     - assets/images/Skull/
+    - assets/images/Duck/
+    - assets/images/Rocks/
     - assets/audio/
 
   fonts:
