@@ -8,9 +8,7 @@ import '/widgets/hud.dart';
 import '/game/dino_run.dart';
 import '/widgets/settings_menu.dart';
 
-
 class MainMenu extends StatelessWidget {
-
   static const id = 'MainMenu';
 
   final DinoRun gameRef;
@@ -37,7 +35,7 @@ class MainMenu extends StatelessWidget {
                 spacing: 10,
                 children: [
                   const Text(
-                    'Khủng Long Phiêu Lưu',
+                    'Khủng Long Phiêu Lưu Ký',
                     style: TextStyle(
                       fontSize: 50,
                       color: Colors.white,
